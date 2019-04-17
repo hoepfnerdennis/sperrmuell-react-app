@@ -660,10 +660,7 @@
     { "name": "DUNANTSTRAßE", "time": 1553122800000 },
     { "name": "DÜRERSTRAßE", "time": 1575414000000 },
     { "name": "DÜRKHEIMER STRAßE", "time": 1566943200000 },
-    {
-        "name": "DURLACHER ALLEE                66A-Ende",
-        "time": 1553814000000
-    },
+    { "name": "DURLACHER ALLEE 66A-Ende", "time": 1553814000000 },
     { "name": "DURLACHER ALLEE 1-21Z", "time": 1553814000000 },
     { "name": "DURLACHER ALLEE 23-69Z", "time": 1553814000000 },
     { "name": "DURLACHER ALLEE 71-91Z", "time": 1553814000000 },
