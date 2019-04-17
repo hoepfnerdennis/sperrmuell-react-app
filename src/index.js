@@ -1,21 +1,18 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
 import { createRenderer } from 'fela'
-import { Provider, ThemeProvider } from 'react-fela'
-import './index.css'
+import { RendererProvider, ThemeProvider } from 'react-fela'
 import App from './App'
 import * as serviceWorker from './serviceWorker'
-
+import theme from './components/theme/theme'
 const renderer = createRenderer()
 
 ReactDOM.render(
-    <Provider renderer={renderer}>
-        <ThemeProvider
-            theme={{ color: { primary: '#f4511e', secoundary: '#8bc34a' } }}
-        >
+    <RendererProvider renderer={renderer}>
+        <ThemeProvider theme={theme}>
             <App />
         </ThemeProvider>
-    </Provider>,
+    </RendererProvider>,
     document.getElementById('root')
 )
 

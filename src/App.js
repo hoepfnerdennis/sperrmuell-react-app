@@ -1,96 +1,48 @@
 import React, { useState } from 'react'
-import { FelaComponent } from 'react-fela'
-import DayPicker, { DateUtils } from 'react-day-picker'
-import Helmet from 'react-helmet'
-import './App.css'
+import { useFela } from 'react-fela'
+import { HashRouter, Route } from 'react-router-dom'
 import streets from './data/data.json'
-import StreetList from './components/list/StreetList'
-import SearchField from './components/list/SearchField'
-import 'react-day-picker/lib/style.css'
+import OverviewPage from './components/overview/OverviewPage'
+import Header from './components/header/Header'
+import DetailPage from './components/details/DetailPage'
 
-const styles = {
-    container: {
-        margin: '.5rem',
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center',
-    },
-    selection: {
-        display: 'flex',
-        flexDirection: 'column',
-    },
-}
+const font = { fontFamily: "'Open Sans', sans-serif" }
 
 const App = () => {
-    const [query, setQuery] = useState('')
+    const { css } = useFela()
+    const today = new Date()
     const [range, setRange] = useState({
-        from: new Date(),
-        to: new Date(new Date().getTime() + 1209600000),
+        from: today,
+        to: new Date(today.getTime() + 1209600000),
     })
-
-    const handleDayClick = day => {
-        const selectedRange = DateUtils.addDayToRange(day, range)
-        setRange(selectedRange)
-    }
-
-    let filteredData = streets
-
-    if (range.from && range.to) {
-        filteredData = filteredData.filter(
-            street =>
-                street.time > range.from.getTime() &&
-                street.time < range.to.getTime()
-        )
-    }
-    if (query.length > 0) {
-        filteredData = filteredData.filter(street =>
-            street.name.includes(query.toUpperCase())
-        )
-    }
-
     return (
-        <FelaComponent style={styles.container}>
-            <FelaComponent style={styles.selection}>
-                <SearchField
-                    onChange={string => {
-                        setQuery(string)
+        <HashRouter>
+            <div className={css(font)}>
+                <Route component={Header} />
+                <Route
+                    exact
+                    path="/"
+                    render={() => (
+                        <OverviewPage
+                            streets={streets}
+                            range={range}
+                            setRange={setRange}
+                        />
+                    )}
+                />
+                <Route
+                    path="/details/:street"
+                    render={({ match }) => {
+                        const selectedStreet = streets.find(
+                            street =>
+                                street.name.toUpperCase() ===
+                                match.params.street.toUpperCase()
+                        )
+                        return <DetailPage street={selectedStreet} />
                     }}
-                    query={query}
                 />
-                <DayPicker
-                    className="Selectable"
-                    selectedDays={[
-                        range.from,
-                        { from: range.from, to: range.to },
-                    ]}
-                    modifiers={{ start: range.from, end: range.to }}
-                    onDayClick={handleDayClick}
-                />
-                {`Auswahl: ${range.from &&
-                    range.from.toLocaleDateString()} bis ${range.to &&
-                    range.to.toLocaleDateString()}`}
-            </FelaComponent>
-            <StreetList streets={filteredData} />
-            <Helmet>
-                <style>{`
-                    .Selectable .DayPicker-Day--selected:not(.DayPicker-Day--start):not(.DayPicker-Day--end):not(.DayPicker-Day--outside) {
-                        background-color: #f0f8ff !important;
-                        color: #4a90e2;
-                    }
-                    .Selectable .DayPicker-Day {
-                        border-radius: 0 !important;
-                    }
-                    .Selectable .DayPicker-Day--start {
-                        border-top-left-radius: 50% !important;
-                        border-bottom-left-radius: 50% !important;
-                    }
-                    .Selectable .DayPicker-Day--end {
-                        border-top-right-radius: 50% !important;
-                        border-bottom-right-radius: 50% !important;
-                    }
-                `}</style>
-            </Helmet>
-        </FelaComponent>
+            </div>
+        </HashRouter>
     )
 }
 
