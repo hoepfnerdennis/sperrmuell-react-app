@@ -23,7 +23,10 @@ const styles = {
 
 const App = () => {
     const [query, setQuery] = useState('')
-    const [range, setRange] = useState({ from: undefined, to: undefined })
+    const [range, setRange] = useState({
+        from: new Date(),
+        to: new Date(new Date().getTime() + 1209600000),
+    })
 
     const handleDayClick = day => {
         const selectedRange = DateUtils.addDayToRange(day, range)
