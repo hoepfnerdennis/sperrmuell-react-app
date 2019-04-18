@@ -6,15 +6,14 @@ import OverviewPage from './components/overview/OverviewPage'
 import Header from './components/header/Header'
 import DetailPage from './components/details/DetailPage'
 
-const font = { fontFamily: "'Open Sans', sans-serif" }
+const font = ({ theme }) => ({
+    fontFamily: theme.font.family,
+})
 
 const App = () => {
     const { css } = useFela()
-    const today = new Date()
-    const [range, setRange] = useState({
-        from: today,
-        to: new Date(today.getTime() + 1209600000),
-    })
+    const [date, setDate] = useState(new Date())
+
     return (
         <HashRouter>
             <div className={css(font)}>
@@ -25,8 +24,8 @@ const App = () => {
                     render={() => (
                         <OverviewPage
                             streets={streets}
-                            range={range}
-                            setRange={setRange}
+                            date={date}
+                            setDate={setDate}
                         />
                     )}
                 />

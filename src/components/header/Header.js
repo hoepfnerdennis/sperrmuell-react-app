@@ -14,6 +14,7 @@ const title = ({ theme }) => ({
     color: theme.color.light,
     textAlign: 'center',
     margin: '1rem 2rem',
+    fontSize: theme.font.size.xl,
 })
 const link = {
     textDecoration: 'none',

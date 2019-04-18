@@ -1,16 +1,16 @@
-import React from 'react'
+import React, { Fragment } from 'react'
 import { useFela } from 'react-fela'
 import StreetList from './StreetList'
 import DatePicker from './DatePicker'
 
 const container = ({ theme }) => ({
     margin: `${theme.space.s} auto`,
+    maxWidth: theme.maxWidth,
     display: 'flex',
     flexDirection: 'row',
     alignItems: 'flex-start',
     justifyContent: 'space-around',
     flexWrap: 'wrap',
-    maxWidth: theme.maxWidth,
 })
 
 const selection = ({ theme }) => ({
@@ -29,26 +29,41 @@ const listview = ({ theme }) => ({
     margin: `0 ${theme.space.s}`,
 })
 
-const OverviewPage = ({ streets, range, setRange }) => {
+const resultHeader = ({ theme }) => ({
+    display: 'flex',
+    justifyContent: 'center',
+    marginTop: theme.space.l,
+    marginBottom: theme.space.s,
+})
+
+const OverviewPage = ({ streets, date, setDate }) => {
     const { css } = useFela()
     let filteredData = streets
-    if (range.from && range.to) {
+    if (date) {
         filteredData = filteredData.filter(
             street =>
-                street.time > range.from.getTime() &&
-                street.time < range.to.getTime()
+                street.time > date.getTime() &&
+                street.time < date.getTime() + 1209600000
         )
     }
     return (
         <div className={css(container)}>
             <div className={css(selection)}>
-                <DatePicker range={range} setRange={setRange} />
-                {`Auswahl: ${range.from &&
-                    range.from.toLocaleDateString()} bis ${range.to &&
-                    range.to.toLocaleDateString()}`}
+                <DatePicker date={date} setDate={setDate} />
             </div>
             <div className={css(listview)}>
-                <StreetList streets={filteredData} />
+                {filteredData.length > 0 && (
+                    <Fragment>
+                        <div className={css(resultHeader)}>
+                            {`${
+                                filteredData.length
+                            } Ergebnisse für ${date.toLocaleDateString()} bis ${new Date(
+                                date.getTime() + 1209600000
+                            ).toLocaleDateString()}`}
+                        </div>
+                        <StreetList streets={filteredData} />
+                    </Fragment>
+                )}
             </div>
         </div>
     )

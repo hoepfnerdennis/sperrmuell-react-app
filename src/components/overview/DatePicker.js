@@ -1,46 +1,75 @@
 import React, { Fragment } from 'react'
-import Helmet from 'react-helmet'
-import DayPicker, { DateUtils } from 'react-day-picker'
+import { useFela } from 'react-fela'
+import DayPickerInput from 'react-day-picker/DayPickerInput'
 import 'react-day-picker/lib/style.css'
 
-const DatePicker = ({ range, setRange }) => {
-    const handleDayClick = day => {
-        const selectedRange = DateUtils.addDayToRange(day, range)
-        setRange(selectedRange)
-    }
+const datePickerInputStyle = ({ theme }) => ({
+    fontSize: '1.5rem',
+    height: '40px',
+    textAlign: 'center',
+    fontFamily: theme.fontFamily,
+    borderRadius: '50px',
+    border: 0,
+    boxShadow: theme.shadow,
+    outline: 'none',
+    width: '300px',
+    padding: `${theme.space.s} ${theme.space.xl}`,
+})
+
+const datePickerOverlayWrapperStyle = ({ theme }) => ({
+    position: 'absolute',
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'flex-start',
+    paddingTop: theme.space.l,
+})
+
+const titleStyle = ({ theme }) => ({
+    marginBottom: theme.space.s,
+})
+
+const datePickerOverlayStyle = { position: 'relative' }
+
+const isDate = date => date instanceof Date
+
+const DatePicker = ({ date, setDate }) => {
+    const { css } = useFela()
     return (
         <Fragment>
-            <DayPicker
-                className="Selectable"
-                selectedDays={[range.from, { from: range.from, to: range.to }]}
-                modifiers={{ start: range.from, end: range.to }}
-                onDayClick={handleDayClick}
-                showOutsideDays
-                firstDayOfWeek={1}
-                enableOutsideDaysClick
-                weekdaysShort={['So', 'Mo', 'Di', 'Mi', 'Do', 'Fr', 'Sa']}
+            <div className={css(titleStyle)}>Wähle ein Datum</div>
+            <DayPickerInput
+                value={date}
+                classNames={{
+                    container: 'DayPickerInput',
+                    overlayWrapper: `DayPickerInput-OverlayWrapper ${css(
+                        datePickerOverlayWrapperStyle
+                    )}`,
+                    overlay: `DayPickerInput-Overlay ${css(
+                        datePickerOverlayStyle
+                    )}`,
+                }}
+                formatDate={date => isDate(date) && date.toLocaleDateString()}
+                onDayChange={selectedDay =>
+                    isDate(selectedDay) && setDate(selectedDay)
+                }
+                keepFocus={false}
+                component={props => (
+                    <input
+                        {...props}
+                        type="button"
+                        className={css(datePickerInputStyle)}
+                    />
+                )}
+                dayPickerProps={{
+                    showOutsideDays: true,
+                    firstDayOfWeek: 1,
+                    enableOutsideDaysClick: true,
+                    weekdaysShort: ['So', 'Mo', 'Di', 'Mi', 'Do', 'Fr', 'Sa'],
+                    selectedDays: date,
+                }}
             />
-            <Helmet>
-                <style>{`
-                    .Selectable .DayPicker-Day--selected:not(.DayPicker-Day--start):not(.DayPicker-Day--end):not(.DayPicker-Day--outside) {
-                        background-color: #f0f8ff !important;
-                        color: #4a90e2;
-                    }
-                    .Selectable .DayPicker-Day {
-                        border-radius: 0 !important;
-                    }
-                    .Selectable .DayPicker-Day--start {
-                        border-top-left-radius: 50% !important;
-                        border-bottom-left-radius: 50% !important;
-                    }
-                    .Selectable .DayPicker-Day--end {
-                        border-top-right-radius: 50% !important;
-                        border-bottom-right-radius: 50% !important;
-                    }
-                `}</style>
-            </Helmet>
         </Fragment>
     )
 }
 
-export default DatePicker
+export default React.memo(DatePicker)
