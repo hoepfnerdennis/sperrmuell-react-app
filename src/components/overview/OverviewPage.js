@@ -19,20 +19,19 @@ const selection = ({ theme }) => ({
     flexBasis: '300px',
     flexDirection: 'column',
     justifySelf: 'flex-start',
-    margin: `0 ${theme.space.s} ${theme.space.s} ${theme.space.s}`,
+    margin: `0 ${theme.space.s} ${theme.space.l} ${theme.space.s}`,
 })
 
 const listview = ({ theme }) => ({
     display: 'flex',
     flexBasis: '400px',
     flexDirection: 'column',
-    margin: `0 ${theme.space.s}`,
+    marginBottom: `0 ${theme.space.s}`,
 })
 
 const resultHeader = ({ theme }) => ({
     display: 'flex',
     justifyContent: 'center',
-    marginTop: theme.space.l,
     marginBottom: theme.space.s,
 })
 
