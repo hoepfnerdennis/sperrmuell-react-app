@@ -4,6 +4,8 @@ import DayPicker from 'react-day-picker'
 import mapIcon from '../../assets/map.png'
 import 'react-day-picker/lib/style.css'
 
+import License from './License'
+
 const container = ({ theme }) => ({
     maxWidth: theme.maxWidth,
     display: 'flex',
@@ -25,12 +27,24 @@ const icon = ({ theme }) => ({
     width: theme.space.l,
 })
 
+const nameStyle = ({ theme }) => ({
+    fontSize: theme.font.size.l,
+    marginTop: theme.space.m,
+    marginBottom: theme.space.m,
+})
+
+const dateStyle = ({ theme }) => ({
+    fontSize: theme.font.size.m,
+    marginTop: theme.space.s,
+    marginBottom: theme.space.s,
+})
+
 const DetailPage = ({ street }) => {
     const { css } = useFela()
     return (
         <div className={css(container)}>
-            <h2>{street.name}</h2>
-            <p>
+            <h2 className={css(nameStyle)}>{street.name}</h2>
+            <p className={css(dateStyle)}>
                 {`Sperrmüllabholung am: ${new Date(
                     street.time
                 ).toLocaleDateString()}`}
@@ -54,6 +68,7 @@ const DetailPage = ({ street }) => {
                 weekdaysShort={['So', 'Mo', 'Di', 'Mi', 'Do', 'Fr', 'Sa']}
                 locale="de"
             />
+            <License />
         </div>
     )
 }
